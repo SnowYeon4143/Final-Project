@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="order">
+ 	<select id="selectOrderSeq" resultType="int">
+ 		select o_no_seq.nextval
+ 		from dual
+ 	</select>
+ 
+ 	<insert id="insertOrder" parameterType="orderVo">
+ 		insert into order1(
+ 			o_no, c_no, project_no, employee_no, warehouse_no, o_date, credit_date, team_code, vat_yn, O_STATEMENT
+ 		)
+ 		values(
+ 			${oNo},
+ 			${cNo},
+ 			${projectNo},
+ 			${employeeNo},
+ 			${warehouseNo},
+ 			#{oDate},
+ 			#{creditDate},
+ 			#{teamCode},
+ 			#{vatYn},
+ 			'N'
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertOrderProduct" parameterType="orderProductVo">
+		 	insert into order_list(o_list_no, o_no, p_no, o_num, o_price, o_delibery_date)
+ 				values(
+ 					o_list_seq.nextval, ${orderNo}, ${pNoStr}, ${oNumStr}, ${oPriceStr}, #{oDeliberyDateStrr}
+				)
+ 	</insert>
+ 
+ 	<select id="selectOrderCnt" parameterType="orderVo" resultType="int">
+ 		select count(distinct o.o_no)
+ 		from order1 o, order_list ol
+        where o.o_no = ol.o_no
+ 		<choose>
+ 			<when test="cNo !=null and cNo !=0"> and o.c_no = ${cNo}</when>
+ 			<when test="projectNo !=null and projectNo!=0"> and o.project_no = ${projectNo}</when>
+ 			<when test="warehouseNo !=null and warehouseNo!=0"> and o.warehouse_no = ${warehouseNo}</when>
+ 			<when test="employeeNo !=null and employeeNo!=0"> and o.employee_no = ${employeeNo}</when>
+ 			<when test="pNo !=null and pNo!=0"> and ol.p_no = ${pNo}</when>	
+ 			<when test="oDate !=null"> <![CDATA[ and o.o_date <= #{oDate} and #{oDate} <= o.credit_date]]></when>	
+ 		</choose>
+ 	</select>
+ 	
+ 	<select id="selectOrderList" parameterType="orderVo" resultType="orderVo">
+ 		select * from 
+  		(
+	  		select rownum rn, op.* 
+	  		from(
+		  		select distinct o.* 
+		  		from order1 o, order_list ol
+		  		where o.o_no = ol.o_no
+		  		<choose>
+		 			<when test="cNo !=null and cNo !=0"> and o.c_no = ${cNo}</when>
+		 			<when test="projectNo !=null and projectNo!=0"> and o.project_no = ${projectNo}</when>
+		 			<when test="warehouseNo !=null and warehouseNo!=0"> and o.warehouse_no = ${warehouseNo}</when>
+		 			<when test="employeeNo !=null and employeeNo!=0"> and o.employee_no = ${employeeNo}</when>
+		 			<when test="pNo !=null and pNo!=0"> and ol.p_no = ${pNo}</when>	
+		 			<when test="oDate !=null"> <![CDATA[ and o.o_date <= #{oDate} and #{oDate} <= o.credit_date]]></when>	
+		 		</choose>
+		  		order by o.o_no  		
+	  		) op
+  		)
+  		where rn between ${startRow} and ${endRow}
+ 	</select>
+ 
+ 	<select id="selectOrderNo" resultType="orderVo">
+ 		select * from order1 where o_no = ${oNo}
+ 	</select>
+ 
+ 	<select id="selectProductOrderNo" resultMap="orderProductMap">
+ 		select * from order_list where o_no = ${oNo}
+ 	</select>
+ 	
+ 	<resultMap type="orderProductVo" id="orderProductMap">
+ 		<result column="o_list_no" property="orderListNo"/>
+ 		<result column="o_no" property="orderNo"/>
+ 		<result column="p_no" property="pNoStr"/>
+ 		<result column="o_num" property="oNumStr"/>
+ 		<result column="o_price" property="oPriceStr"/>
+ 		<result column="o_delibery_date" property="oDeliberyDateStrr"/>
+ 	</resultMap>
+ 	
+ 	<update id="updateorder" parameterType="orderVo">
+ 		update order1 set c_no = ${cNo}, project_no = ${projectNo}, employee_no = ${employeeNo}, warehouse_no = ${warehouseNo},
+ 									o_date = #{oDate}, credit_date = #{creditDate}, team_code = #{teamCode}, vat_yn = #{vatYn}
+ 			where o_no = ${oNo}
+ 	</update>
+ 
+ 	<update id="updateorderProduct" parameterType="orderProductVo">
+ 		update order_list set p_no = ${pNoStr}, o_num = ${oNumStr}, o_price = ${oPriceStr}, o_delibery_date = #{oDeliberyDateStrr}
+ 			where o_list_no = ${orderListNo}
+ 	</update>
+ </mapper>

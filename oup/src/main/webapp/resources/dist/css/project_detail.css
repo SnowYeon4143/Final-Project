@@ -1,0 +1,35 @@
+.card-header{
+    background-color: #71628e !important;
+}
+
+.info-box{
+    background-color: #90899b;
+}
+#box1{
+    color: white !important;
+    font-size: 20px;
+}
+#box2{
+    color: white !important;
+}
+#con-title{
+    font-size: 20px;
+}
+.card{
+    padding: 100px;
+}
+.card-body{
+    background-color: #f5f5f5;
+}
+#print{
+	height:35px;
+	background-color: white;
+	margin-left:10px;
+	border:2px solid #d4d4d4;
+}
+#sbBtn{
+	width:80px;
+}
+#sale:hover{
+	color: black;
+}

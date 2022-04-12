@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <!-- 파일이름 바꾸기 -->
+ 
+ <mapper namespace="product">
+ 	<insert id="addProduct" parameterType="com.kh.oup.product.vo.ProductVo">
+ 		INSERT INTO PRODUCT
+ 		(
+ 			P_NO,
+			P_NAME,
+			P_STANDARD,
+			P_COUNT,
+			P_UNIT_PRICE,
+			P_SUPPLY_PRICE,
+			P_NOTE,
+			WAREHOUSE_NO
+ 		)
+ 		VALUES
+ 		(
+ 			SEQ_PRODUCT.NEXTVAL,
+ 			#{pName},
+ 			#{pStandard},
+ 			#{pCount},
+ 			#{pUnitPrice},
+ 			#{pSupplyPrice},
+ 			#{pNote},
+ 			#{warehouseNo}
+ 		)
+ 	</insert>
+ </mapper>

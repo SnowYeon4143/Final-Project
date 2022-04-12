@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="project">
+ 
+ <!-- 페이징 totalrows 카운트 -->
+ <select id="getPrjCnt" resultType="int">
+ SELECT COUNT(PROJECT_NO) 
+	FROM PROJECT
+ </select>
+ 	
+ <!-- 리스트 조회 -->	
+ <select id="getPrjList" parameterType="pageVo" resultType="com.kh.oup.project.vo.ProjectVo">
+ SELECT * 
+	FROM ( 
+    	SELECT ROWNUM RN, J.* 
+   		FROM ( 
+	        SELECT * 
+	        FROM PROJECT P 
+	        LEFT OUTER JOIN (
+	        SELECT PROJECT_NO,SUM(SALE_SUM) AS SUMS ,SUM(S_UMONEY)AS SUMU
+	        FROM SALE 
+	        GROUP BY PROJECT_NO
+            ) S 
+        ON(P.PROJECT_NO = S.PROJECT_NO)
+        ORDER BY P.PROJECT_NO DESC 
+        ) J 
+    )WHERE RN BETWEEN #{startRow} AND #{endRow}
+ 
+ </select>
+ 
+ 
+ <!--검색 페이징 totalrows 카운트 -->
+ <select id="getSearchPrjCnt" parameterType="String" resultType="int">
+ SELECT COUNT(PROJECT_NO) 
+	FROM PROJECT
+	WHERE PROJECT_NAME LIKE '%${search}%'
+ </select>
+  
+ 
+ <!--검색 리스트 조회 -->	
+ <select id="getSearchPrjList" parameterType="pageVo" resultType="com.kh.oup.project.vo.ProjectVo">
+ SELECT * 
+	FROM ( 
+    	SELECT ROWNUM RN, J.* 
+   		FROM ( 
+	        SELECT * 
+	        FROM PROJECT P 
+	        LEFT OUTER JOIN (
+	        SELECT PROJECT_NO,SUM(SALE_SUM) AS SUMS ,SUM(S_UMONEY)AS SUMU
+	        FROM SALE 
+	        GROUP BY PROJECT_NO
+            ) S 
+        ON(P.PROJECT_NO = S.PROJECT_NO)
+        WHERE PROJECT_NAME LIKE '%${search}%' 
+        ORDER BY P.PROJECT_NO DESC 
+        ) J 
+    )WHERE RN BETWEEN #{startRow} AND #{endRow}
+ 
+ </select>
+ 
+ 
+ <!-- 삭제 ======================================================================= -->
+ <delete id="getDelPrj" parameterType="int">
+ 	DELETE 
+ 	FROM PROJECT
+ 	WHERE PROJECT_NO = #{projectNo}
+ </delete>
+ 
+ 
+ 
+ <!--prj 조회 ===================================================================  -->
+ <select id="getPrj" parameterType="int" resultType="com.kh.oup.project.vo.ProjectVo">
+ SELECT P.*, S.SUMU
+ FROM PROJECT P
+	 LEFT OUTER JOIN (
+	        SELECT PROJECT_NO, SUM(S_UMONEY)AS SUMU
+	        FROM SALE 
+	        GROUP BY PROJECT_NO
+            ) S 
+		ON (P.PROJECT_NO = S.PROJECT_NO)
+ WHERE P.PROJECT_NO = #{projectNo}
+ </select>
+
+<!--prjGroup 조회 projectNo  -->
+<select id="getPrjGroup" parameterType="int" resultType="com.kh.oup.project.vo.ProjectGroupVo">
+ SELECT * 
+ FROM GROUP1
+ WHERE PROJECT_NO = #{projectNo}
+</select>
+
+<!-- prj조회 oder,statement 리스트 -->
+<select id="getOlist" parameterType="int" resultType="com.kh.oup.project.vo.PrjOder">
+ SELECT O.O_NO, S.S_NO 
+ FROM ORDER1 O 
+ LEFT OUTER JOIN STATEMENT S ON(O.O_NO = S.O_NO) 
+ WHERE O.PROJECT_NO = #{projectNo}
+</select>
+
+<!-- prj조회  판매번호 리스트  -->
+<select id="getSaleList" parameterType="int" resultType="java.lang.Integer">
+SELECT SALE_NO
+FROM SALE
+WHERE PROJECT_NO = #{projectNo}
+</select>
+
+<!-- prj 등록========================================================================== -->
+<insert id="enrollPrj" parameterType="com.kh.oup.project.vo.ProjectVo">
+INSERT INTO PROJECT 
+(
+	PROJECT_NO,
+	<if test="projectName != null">	
+	PROJECT_NAME,
+	</if>
+	<if test="projectContents1 != null">	
+	PROJECT_CONTENTS1,
+	</if>
+	<if test="projectContents2 != null">	
+	PROJECT_CONTENTS2,
+	</if>
+	<if test="projectContents3 != null">	
+	PROJECT_CONTENTS3,
+	</if>
+	<if test="projectContents4 != null">	
+	PROJECT_CONTENTS4,
+	</if>
+	<if test="projectStart != null">	
+	PROJECT_START,
+	</if>
+	<if test="projectEnd != null">	
+	PROJECT_END,
+	</if>
+	D_C_CODE,
+	A_STATEMENT
+)
+VALUES(
+	PROJECT_NO_SEQ.NEXTVAL,
+	<if test="projectName != null">	
+	#{projectName},
+	</if>
+	<if test="projectContents1 != null">	
+	#{projectContents1},
+	</if>
+	<if test="projectContents2 != null">	
+	#{projectContents2},
+	</if>
+	<if test="projectContents3 != null">	
+	#{projectContents3},
+	</if>
+	<if test="projectContents4 != null">	
+	#{projectContents4},
+	</if>
+	<if test="projectStart != null">	
+	#{projectStart},
+	</if>
+	<if test="projectEnd != null">	
+	#{projectEnd},
+	</if>
+	'PJ',
+	'대기'
+)
+
+</insert>
+
+<!-- 프로젝트 수정 =========================================================  -->
+<update id="editPrj" parameterType="com.kh.oup.project.vo.ProjectVo">
+	UPDATE PROJECT
+	SET
+	<if test="projectName != null">	
+	PROJECT_NAME = #{projectName},
+	</if>
+	<if test="projectContents1 != null">	
+	PROJECT_CONTENTS1 = #{projectContents1},
+	</if>
+	<if test="projectContents2 != null">	
+	PROJECT_CONTENTS2 = #{projectContents2},
+	</if>
+	<if test="projectContents3 != null">	
+	PROJECT_CONTENTS3 = #{projectContents3},
+	</if>
+	<if test="projectContents4 != null">	
+	PROJECT_CONTENTS4 = #{projectContents4},
+	</if>
+	<if test="projectStart != null">	
+	PROJECT_START = #{projectStart},
+	</if>
+	<if test="projectEnd != null">	
+	PROJECT_END = #{projectEnd},
+	</if>
+	D_C_CODE = 'PJ'
+
+	WHERE PROJECT_NO = #{projectNo}
+</update>
+
+<select id="getPrjNo" resultType="int">
+	SELECT PROJECT_NO_SEQ.CURRVAL
+	FROM DUAL
+</select>
+
+</mapper>

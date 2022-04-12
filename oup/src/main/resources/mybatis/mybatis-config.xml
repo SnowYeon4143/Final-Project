@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  <configuration>
+	<settings>
+	<setting name="mapUnderscoreToCamelCase" value="true"/>
+	<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+  
+  	<typeAliases>
+  		<typeAlias type="com.kh.oup.common.PageVo" alias="pageVo"/>
+  		<typeAlias type="com.kh.oup.employee.vo.EmployeeVo" alias="employeeVo"/>
+  		<typeAlias type="com.kh.oup.client.vo.ClientVo" alias="clientVo"/>
+  		<typeAlias type="com.kh.oup.mail.vo.MailVo" alias="mailVo"/>
+  		<typeAlias type="com.kh.oup.sale.vo.SaleVo" alias="saleVo"/>
+		<typeAlias type="com.kh.oup.sale.vo.SaleListVo" alias="saleListVo"/>
+		<typeAlias type="com.kh.oup.order.vo.OrderVo" alias="orderVo"/>
+		<typeAlias type="com.kh.oup.order.vo.OrderProductVo" alias="orderProductVo"/>
+  	</typeAliases>
+  
+  </configuration>

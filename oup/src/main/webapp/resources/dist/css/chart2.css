@@ -1,0 +1,51 @@
+#card-title{
+    background-color: #5a4e70;
+
+}
+.content-wrapper{
+    background-image: url();
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+#year{
+	border-radius:5px;
+	outline: 0px;
+	border: 3px solid  #443b53;
+	font-size : 20px;
+	color:  white;
+	background-color:#5a4e70;
+}
+
+#sales{
+	width:100%;
+	
+}
+
+#sales td{
+	text-align: center;
+	border:1px solid lightgray;
+	font-size:20px;
+}
+#sales td:first-child{
+	width:40%;
+}
+
+
+#sales tr:nth-child(2n){
+	background-color:#ebe7f177;
+}
+#sales tr:nth-child(2n-1){
+	color:white;
+}
+
+#sales tr:first-child{
+	font-weight:bold;
+	background-color:#c3b9d6;
+}
+#chartTb{
+	height:450px;
+	overflow-y: scroll;
+	
+}

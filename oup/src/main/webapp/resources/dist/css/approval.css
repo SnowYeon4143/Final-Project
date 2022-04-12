@@ -1,0 +1,111 @@
+.content-wrapper {
+    background-color: white;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+#atb{
+    width: 20%;
+}
+#atb td{
+    font-size: 16px;
+    font-weight: bold;
+}
+select{
+    width: 100%;
+}
+
+
+input {
+    width: 100%;
+    height: 100%;
+    margin: 0%;
+    border: 0;
+    /* background-color: red; */
+}
+#btb td,#ctb td,th{
+    padding: 0%;
+    margin: 0%;
+    text-align: center;
+    font-size: 16px;
+    background-color: white;
+}
+/* 위 테이블 - 기본정보, 거래처*/
+
+#btb {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+}
+
+
+/* 아래테이블 - 상품목록 */
+
+
+#ctb {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+}
+
+.b1{
+    width: 50%;
+    height: 50px;
+    border: 0.2px solid black;
+}
+#search-client{
+    float: right;
+}
+
+
+.colName{
+    width: 10%;
+    background-color: #d7d0e3 !important;
+}
+.colName2{
+    background-color: #5a4e70 !important;
+    color: white;
+}
+.colName3{
+    background-color: #918e97 !important;
+}
+
+#btn2{
+    text-align: center;
+}
+
+.b2{
+    width: 500px;
+    height: 40px;
+    border: 1px solid #c3b9d6;
+    background-color: #ebe7f1;
+    margin: 3px;
+}
+
+#border1{
+    width: 80%;
+    border: 2px solid black;
+    padding: 50px;
+}
+#tb1{
+    width: 100%;
+    border: 2px solid black;
+}
+
+#tb1 td:nth-child(1){
+    width: 20%;
+    background-color: #d8d3e2;
+    padding-left: 10px !important;
+}
+#tb1 tr{
+    height: 130px;
+}
+
+#tb1 tr:nth-child(1){ height: 50px;}
+#tb1 tr:nth-child(6){ height: 50px;}
+#tb1 tr:nth-child(7){ height: 40px; }
+#tb1 tr:nth-child(7)>td{ background-color: #757080; text-align: center; }
+#tb1 tr:nth-child(8){ height: 50px;}
+#tb1 tr:nth-child(9){ height: 50px;}

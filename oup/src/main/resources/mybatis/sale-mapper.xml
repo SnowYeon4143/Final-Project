@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="sale">
+	<select id="getSeq" resultType="long">
+		SELECT SEQ_SALE.NEXTVAL FROM DUAL
+	</select>
+
+	<insert id="saleEnter" parameterType="saleVo">
+		INSERT INTO SALE
+		(
+			SALE_NO,
+			C_NO,
+			WAREHOUSE_NO,
+			EMPLOYEE_NO,
+			PROJECT_NO,
+			O_NO,
+			SALE_SUM,
+			SALE_DATE,
+			S_UMONEY,
+			VAT_YN
+		)
+		VALUES
+		(
+		<!-- cbj -->
+			#{saleNo},
+			#{cNo},
+			#{wareHouseNo},
+			#{employeeNo},
+			#{projectNo},
+			NULL, <!-- #{oNo} -->
+			#{sUmoney},
+			#{saleDate},
+			#{sUmoney},
+			#{vatYN}
+		)
+	</insert>
+	
+	<insert id="saleListEnter" parameterType="saleListVo">
+		INSERT INTO SALE_LIST (
+			SALE_LIST_NO,
+			SALE_NO,
+			P_NO,
+			S_QNT,
+			S_PRICE,
+			S_DELIBERY_DATE
+		)
+		VALUES
+		(
+			SEQ_SALE_LIST.NEXTVAL,
+			#{saleNo},
+			#{pNo},
+			#{sQnt},
+			#{sPrice},
+			#{sDeliberyDate}
+		)
+	</insert>
+	
+	<update id="clientAddUmony" parameterType="HashMap">
+		UPDATE CLIENT
+		SET
+		C_UMONY = #{sUmony}
+		WHERE
+		C_NO = #{cNo}
+	</update>
+	
+	<update id="saleUpdate" parameterType="saleVo">
+		UPDATE SALE
+		SET
+		C_NO = #{cNo},
+		WAREHOUSE_NO = #{wareHouseNo},  
+		EMPLOYEE_NO = #{employeeNo}, 
+		PROJECT_NO = #{projectNo},
+		SALE_SUM = #{saleSum},
+		SALE_DATE = #{saleDate},
+		S_UMONEY = #{sUmoney}
+		WHERE
+		SALE_NO = #{saleNo}
+	</update>
+	
+	<update id="saleListUpdate" parameterType="saleListVo">
+		UPDATE SALE_LIST
+		SET
+		P_NO = #{pNo},
+		S_QNT = #{sQnt},
+		S_PRICE = #{sPrice},
+		S_DELIBERY_DATE = #{sDeliberyDate}
+		WHERE 
+		SALE_LIST_NO = #{saleListNo}
+	</update>
+	
+	<update id="productCount" parameterType="HashMap">
+		UPDATE PRODUCT
+		SET
+		P_COUNT = P_COUNT - ${sQnt}
+		WHERE
+		P_NO = #{pNo}
+	</update>
+	
+	<select id="getSaleCnt" resultType="int">
+		SELECT COUNT(SALE_NO)
+		FROM SALE
+	</select>
+	
+	<select id="getSaleList" resultType="saleVo">
+		SELECT * FROM 
+  		(
+	  		SELECT ROWNUM RN, R.* 
+	  		 FROM(
+                SELECT *
+                FROM SALE S
+                ORDER BY SALE_NO DESC
+            ) R
+  		)
+  		WHERE RN BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="getCName" resultType="String">
+		SELECT C_NAME 
+		FROM CLIENT 
+		WHERE C_NO = #{cNo}
+	</select>
+	
+	<select id="getEmployeeName" resultType="String">
+		SELECT EMPLOYEE_NAME 
+		FROM EMPLOYEE 
+		WHERE EMPLOYEE_NO = #{employeeNo}
+	</select>
+	
+	<select id="getProductNo" resultType="String">
+		SELECT P_NO FROM 
+  		(
+	  		SELECT ROWNUM RN, R.* 
+	  		 FROM(
+                SELECT P_NO 
+                FROM SALE_LIST 
+                WHERE SALE_NO = #{saleNo}
+            ) R
+  		)
+  		WHERE RN BETWEEN 1 AND 1
+	</select>
+	
+	<select id="getProductName" resultType="String">
+		SELECT P_NAME
+		FROM PRODUCT
+		WHERE P_NO = #{pNo}
+	</select>
+	
+	<select id="getProductCnt" resultType="String">
+		SELECT COUNT(SALE_LIST_NO)
+		FROM SALE_LIST
+		WHERE SALE_NO = #{saleNo}
+	</select>
+	
+	<select id="getWareHouseName" resultType="String">
+		SELECT WAREHOUSE_NAME 
+		FROM WAREHOUSE
+		WHERE WAREHOUSE_NO = #{wareHouseNo}
+	</select>
+	
+	<select id="getProjectName" resultType="String">
+		SELECT PROJECT_NAME
+		FROM PROJECT
+		WHERE PROJECT_NO = #{projectNo}
+	</select>
+	
+	<select id="getSale" resultType="saleVo">
+		SELECT * 
+		FROM SALE
+		WHERE SALE_NO = #{saleNo}
+	</select>
+	
+	<select id="getSaleProductList" resultType="saleListVo">
+		SELECT * 
+		FROM SALE_LIST
+		WHERE SALE_NO = #{saleNo}
+	</select>
+	
+	<select id="getOrderProductList" resultType="com.kh.oup.sale.vo.OrderListVo">
+		SELECT * 
+		FROM ORDER_LIST
+		WHERE O_NO = #{oNo}
+	</select>
+	
+	<select id="unitPrice" resultType="long">
+		SELECT P_UNIT_PRICE
+		FROM PRODUCT
+		WHERE P_NO = #{pNo}
+	</select>
+	
+	<select id="getOrder" resultType="com.kh.oup.sale.vo.OrderVo">
+		SELECT * FROM ORDER1 WHERE O_NO = #{orderNo}
+	</select>
+	
+	<select id="getUmoney" resultType="long">
+		SELECT C_UMONY FROM CLIENT WHERE C_NO = #{cNo}
+	</select>
+</mapper>

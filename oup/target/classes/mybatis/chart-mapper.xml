@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="chart">
+<select id="getSalesList" parameterType="String" resultType="com.kh.oup.chart.vo.MonthChartVo">
+SELECT  M.MONTH ,T.SUMS, T.SUMU, T.PAID
+FROM MONTH1 M 
+LEFT OUTER JOIN (
+    SELECT 
+        S.*, 
+        (S.SUMS - S.SUMU) AS PAID 
+    FROM(
+        SELECT 
+            SUBSTR(SALE_DATE,6,2) AS MONTH1,
+            SUM(SALE_SUM) AS SUMS,
+            SUM(S_UMONEY)AS SUMU
+        FROM SALE
+        WHERE SUBSTR(SALE_DATE,1,4) = #{year}
+        GROUP BY SUBSTR(SALE_DATE,6,2)
+        ) S 
+    ) T
+    ON(M.MONTH = T.MONTH1)
+    ORDER BY MONTH
+</select>
+<select id="getPrjSalesList" parameterType="String" resultType="com.kh.oup.chart.vo.ProjectChartVo">
+SELECT 
+	P.PROJECT_NO, 
+	S.SALE_SUM
+FROM PROJECT P
+JOIN (
+	SELECT 
+		PROJECT_NO, 
+		SUM(SALE_SUM) AS SALE_SUM
+	FROM SALE
+	GROUP BY PROJECT_NO 
+	) S
+ON (P.PROJECT_NO = S.PROJECT_NO)
+WHERE TO_CHAR(P.PROJECT_END,'YYYY') = #{year}
+ORDER BY S.SALE_SUM DESC
+
+</select>
+
+
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <!-- 파일이름 바꾸기 -->
+ 
+<mapper namespace="employee">
+	<select id="getEmployee" parameterType="employeeVo" resultType="employeeVo">
+		SELECT *
+		FROM EMPLOYEE
+		WHERE EMPLOYEE_ID = #{employeeId}
+	</select>
+	<select id="getEmployeeList" resultType="employeeVo">
+ 		SELECT * 
+ 		FROM EMPLOYEE
+ 		WHERE ENT_YN = 'N'
+ 		ORDER BY EMPLOYEE_NO
+	</select>
+	<select id="loginEmployee" parameterType="employeeVo" resultType="employeeVo">
+		SELECT *
+		FROM EMPLOYEE
+		<if test="employeeId != null and employeePwd != null">
+	  		WHERE EMPLOYEE_ID = #{employeeId}
+	  		AND EMPLOYEE_PWD = #{employeePwd}
+  		</if>
+	</select>
+</mapper>

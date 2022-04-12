@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <!-- 파일이름 바꾸기 -->
+ 
+ <mapper namespace="mail">
+ 	<select id="getSeq" resultType="int">
+ 		SELECT SEQ_MAIL.NEXTVAL FROM DUAL
+ 	</select>
+ 	
+ 	<insert id="insertMail" parameterType="mailVo">
+ 		INSERT INTO MAIL
+ 		(
+ 			MAIL_NO,
+ 			MAIL_TITLE,
+ 			MAIL_CONTENT,
+ 			RECIPIENT,
+ 			SENDER,
+ 			MAIL_DATE,
+ 			READ_YN,
+ 			MAIL_R_DEL_YN,
+ 			MAIL_S_DEL_YN
+ 		)
+ 		VALUES
+ 		(
+ 			#{mailNo},
+ 			#{mailTitle},
+ 			#{mailContent},
+ 			#{recipient},
+ 			#{sender},
+ 			SYSDATE,
+ 			'N',
+ 			'N',
+ 			'N'
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertMailFile" parameterType="mailVo">
+ 		INSERT INTO MAILFILE
+ 		(
+ 			MAIL_FILE_NO,
+ 			MAIL_NO,
+ 			FILE_SERVER_NAME1,
+ 			FILE_SERVER_NAME2,
+ 			FILE_SERVER_NAME3,
+ 			FILE_ORIGIN_NAME1,
+ 			FILE_ORIGIN_NAME2,
+ 			FILE_ORIGIN_NAME3
+ 		)
+ 		VALUES
+ 		(
+ 			SEQ_MAIL_FILE.NEXTVAL,
+ 			#{mailNo},
+ 			#{changeName1},
+ 			#{changeName2},
+ 			#{changeName3},
+ 			#{originName1},
+ 			#{originName2},
+ 			#{originName3}
+ 		)
+ 	</insert>
+ 	
+ 	<select id="getRecipientNo" resultType="int">
+ 		SELECT EMPLOYEE_NO
+ 		FROM EMPLOYEE
+ 		WHERE EMPLOYEE_ID = #{r}
+ 	</select>
+ 	<select id="getSenderNo" resultType="int">
+ 		SELECT EMPLOYEE_NO
+ 		FROM EMPLOYEE
+ 		WHERE EMPLOYEE_ID = #{s}
+ 	</select>
+ 	
+ 	<select id="selectReMailCnt" parameterType="long" resultType="int">
+ 		SELECT COUNT(MAIL_NO)
+ 		FROM MAIL
+ 		WHERE MAIL_R_DEL_YN = 'N' AND RECIPIENT = #{rNo}
+ 	</select>
+ 	
+ 	<select id="selectSeMailCnt" parameterType="long" resultType="int">
+ 		SELECT COUNT(MAIL_NO)
+ 		FROM MAIL
+ 		WHERE MAIL_S_DEL_YN = 'N' AND SENDER = #{sNo}
+ 	</select>
+ 	
+ 	<select id="selectReceiveMailList" parameterType="HashMap" resultType="mailVo">
+  		SELECT * FROM 
+  		(
+	  		SELECT ROWNUM RN, R.* 
+	  		 FROM(
+                SELECT M.*, E.EMPLOYEE_NAME AS recipientStr, E.EMPLOYEE_ID AS recipientId
+                FROM MAIL M
+                JOIN EMPLOYEE E
+                ON M.RECIPIENT = E.EMPLOYEE_NO
+                WHERE MAIL_R_DEL_YN = 'N' AND RECIPIENT = #{receiverNo}
+                ORDER BY MAIL_NO DESC
+            ) R
+  		)
+  		WHERE RN BETWEEN #{page.startRow} AND #{page.endRow}
+  	</select>
+  	
+  	<select id="selectSendMailList" parameterType="HashMap" resultType="mailVo">
+  		SELECT * FROM 
+  		(
+	  		SELECT ROWNUM RN, R.* 
+	  		 FROM(
+                SELECT M.*, E.EMPLOYEE_NAME AS recipientStr, E.EMPLOYEE_ID AS recipientId
+                FROM MAIL M
+                JOIN EMPLOYEE E
+                ON M.RECIPIENT = E.EMPLOYEE_NO
+                WHERE MAIL_S_DEL_YN = 'N' AND SENDER = #{senderNo}
+                ORDER BY MAIL_NO DESC
+            ) R
+  		)
+  		WHERE RN BETWEEN #{page.startRow} AND #{page.endRow}
+  	</select>
+  	
+  	<select id="getSenderStr" resultType="String">
+  		SELECT EMPLOYEE_NAME
+  		FROM EMPLOYEE
+  		WHERE EMPLOYEE_NO = #{sender}
+  	</select>
+  	
+  	<select id="getSenderId" resultType="String">
+  		SELECT EMPLOYEE_ID
+  		FROM EMPLOYEE
+  		WHERE EMPLOYEE_NO = #{sender}
+  	</select>
+  	
+  	<update id="deletSendMail">
+  		UPDATE MAIL
+  		SET MAIL_S_DEL_YN = 'Y'
+  		WHERE MAIL_NO IN
+  		<foreach collection="array" item="m" open="(" close=")" separator=",">
+  			${m}
+  		</foreach>
+  	</update>
+  	
+  	<update id="deletReceiveMail">
+  		UPDATE MAIL
+  		SET MAIL_R_DEL_YN = 'Y'
+  		WHERE MAIL_NO IN
+  		<foreach collection="array" item="m" open="(" close=")" separator=",">
+  			${m}
+  		</foreach>
+  	</update>
+  	
+  	<select id="selectTrashMailCnt" resultType="int">
+  		SELECT COUNT(MAIL_NO)
+ 		FROM MAIL
+ 		WHERE (MAIL_R_DEL_YN = 'Y' OR MAIL_S_DEL_YN = 'Y') AND (RECIPIENT = #{lNo} OR SENDER = #{lNo})
+  	</select>
+  	
+  	<select id="selectTrashMailList" parameterType="HashMap" resultType="mailVo">
+  		SELECT * FROM 
+  		(
+	  		SELECT ROWNUM RN, T.* 
+	  		 FROM(
+                SELECT M.*, E.EMPLOYEE_NAME AS recipientStr, E.EMPLOYEE_ID AS recipientId
+                FROM MAIL M
+                JOIN EMPLOYEE E
+                ON M.RECIPIENT = E.EMPLOYEE_NO
+                WHERE (MAIL_R_DEL_YN = 'Y' OR MAIL_S_DEL_YN = 'Y') AND (RECIPIENT = #{loginNo} OR SENDER = #{loginNo})
+                ORDER BY MAIL_NO DESC
+            ) T
+  		)
+  		WHERE RN BETWEEN #{page.startRow} AND #{page.endRow}
+  	</select>
+  	
+  	<select id="selectMail" parameterType="HashMap" resultType="mailVo">
+  		SELECT M.*, E.EMPLOYEE_NAME AS recipientStr, E.EMPLOYEE_ID AS recipientId
+  		<if test="fileYN == 1">  		
+  		, F.FILE_SERVER_NAME1 AS changeName1, F.FILE_SERVER_NAME2 AS changeName2, F.FILE_SERVER_NAME3 AS changeName3, F.FILE_ORIGIN_NAME1 AS originName1, F.FILE_ORIGIN_NAME2 AS originName2, F.FILE_ORIGIN_NAME3 AS originName3
+  		</if>
+        FROM MAIL M
+        JOIN EMPLOYEE E
+        	ON M.RECIPIENT = E.EMPLOYEE_NO
+        <if test="fileYN == 1">
+        JOIN MAILFILE F
+        	ON M.MAIL_NO = F.MAIL_NO
+        </if>
+  		WHERE M.MAIL_NO = #{mailNo}
+  	</select>
+  	
+  	<update id="deleteMail">
+  		UPDATE MAIL
+  		SET MAIL_R_DEL_YN = 'Y', MAIL_S_DEL_YN = 'Y'
+  		WHERE MAIL_NO = #{mailNo}
+  	</update>
+  	
+  	<select id="checkFile" resultType="String">
+  		SELECT COUNT(*)
+  		FROM MAIL M
+  		JOIN MAILFILE F
+  			ON M.MAIL_NO = F.MAIL_NO
+  		WHERE M.MAIL_NO = #{mailno}
+  	</select>
+  	
+  	<update id="mailRead">
+  		UPDATE MAIL
+  		SET READ_YN = 'Y'
+  		WHERE MAIL_NO = #{mailNo}
+  	</update>
+ </mapper>

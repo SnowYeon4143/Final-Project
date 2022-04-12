@@ -1,0 +1,99 @@
+body{
+	overflow-x: hidden !important;
+}
+.content-wrapper {
+    background-color: white;
+}
+#cardss{
+	width:90% !important;
+	margin-left: 5%;
+    padding: 5%;
+    background-color: #ebe7f1;
+}
+
+/* #btb tr{
+	  height:20px !important;
+}
+ */
+#btb th{
+    background-color: #d7d0e3;
+    text-align: center;
+}
+
+#btb td{
+    background-color: white;
+  
+    text-align: right;
+}
+
+#btb tbody tr:hover td{
+	background-color: #ebe7f1;
+}
+
+
+.atb1{width: 30%;}
+.atb1 td:nth-child(1){width: 35%;}
+.atb1 td:nth-child(3){width: 7%;}
+
+
+.atb2{width: 30%;}
+.atb2 td:nth-child(1){width: 20%;}
+.atb2 td:nth-child(2){width: 60%;}
+.atb2 td:nth-child(2)>input{width: 100%;}
+
+
+
+.page-item{
+    margin: 1px;
+    border: none;
+    border-radius: 10px;
+}
+.page-item a{
+    color: #8977ad;
+    font-weight: bolder;
+}
+
+input, select{
+    height: 35px;
+    border: 1px solid #d7d0e3;
+    border-radius: 3px;
+}
+
+#btn1{
+	background-color: #d7d0e3;
+	border: 0;
+	border-radius: 3px;
+}
+#btn1:hover{
+	background-color: #8977ad;
+	color: white;
+	border: 0;
+	border-radius: 3px;
+}
+
+#btn2{
+	background-color: #d7d0e3;
+	border: 0;
+	border-radius: 3px;
+}
+#btn2:hover{
+	background-color: #8977ad;
+	color: white;
+	border: 0;
+	border-radius: 3px;
+}
+
+#ckdel{
+	background-color: #d7d0e3;
+	border: 0;
+	border-radius: 3px;
+}
+
+#ckdel:hover{
+	background-color: #9e2942;
+	color: white;
+	border: 0;
+	border-radius: 3px;
+}
+
+

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <!-- 파일이름 바꾸기 -->
+ 
+ <mapper namespace="approval">
+ 	<select id="getODList" resultType="com.kh.oup.approval.vo.ApprovalODVo">
+ 		SELECT * FROM ORDER1
+ 	</select>
+ 	
+ 	<select id="getODPrice" resultType="int">
+ 		SELECT SUM(O_PRICE)
+		FROM ORDER_LIST
+		WHERE O_NO = #{oNo}
+ 	</select>
+ 	
+ 	<select id="getSPList" resultType="com.kh.oup.approval.vo.ApprovalSPVo">
+ 		SELECT * FROM STATEMENT
+ 	</select>
+ 	
+ 	<select id="getPJList" resultType="com.kh.oup.approval.vo.ApprovalPJVo">
+ 		SELECT * FROM PROJECT
+ 	</select>
+ 	
+ 	<insert id="appSend" parameterType="com.kh.oup.approval.vo.ApprovalVo">
+ 		INSERT INTO APPR
+ 		(
+ 			A_NO,
+ 			A_R_NO,
+ 			D_C_CODE,
+ 			A_DOC_NO,
+ 			A_TITLE,
+			A_DATE,
+			A_E_DATE1,
+			A_E_DATE2,
+			A_E_DATE3,
+			A_PIC_NAME,
+			A_TEAM_NY,
+			A_DEC_NY,
+			A_ALLDEC_NY,
+			A_STATEMENT,
+			A_SERVER_NAME,
+			A_ORIGIN_NAME
+ 		)
+ 		VALUES
+ 		(
+ 			SEQ_APPROVAL.NEXTVAL,
+ 			#{arNo},
+ 			#{dcCode},
+ 			#{aDocNo},
+ 			#{aTitle},
+ 			SYSDATE,
+ 			NULL,
+ 			NULL,
+ 			NULL,
+ 			#{aPicName},
+ 			'N',
+ 			'N',
+ 			'N',
+ 			'N',
+ 			#{changeName},
+ 			#{originName}
+ 		)
+ 	</insert>
+ 	
+ 	<select id="getSendAppCnt" resultType="int">
+ 		SELECT COUNT(A_NO)
+ 		FROM APPR
+ 		WHERE A_PIC_NAME = #{name} AND A_STATEMENT = 'N'
+ 	</select>
+ 	
+ 	<select id="getReceiveAppCnt" resultType="int">
+ 		SELECT COUNT(A1.A_NO)
+				FROM APPR A1
+				JOIN APPR_REGUL A2
+				ON A1.A_R_NO = A2.A_R_NO
+				WHERE (A2.DECISION_CODE = #{loginjobTitleCode} OR A2.ALLDECISION_CODE = #{loginjobTitleCode}) AND A1.A_STATEMENT = 'N'
+ 	</select>
+ 	
+ 	<select id="getCompleteAppCnt" resultType="int">
+ 		SELECT COUNT(A_NO)
+ 		FROM APPR
+ 		WHERE A_PIC_NAME = #{name} AND A_STATEMENT = 'Y'
+ 	</select>
+ 	
+ 	<select id="getSendApprovalList" parameterType="HashMap" resultType="com.kh.oup.approval.vo.ApprovalVo">
+ 		SELECT * FROM 
+  		(
+	  		SELECT ROWNUM RN, R.* 
+	  		 FROM(
+                SELECT *
+                FROM APPR
+                WHERE A_PIC_NAME = #{loginName}
+                ORDER BY A_NO DESC
+            ) R
+  		)
+  		WHERE RN BETWEEN #{page.startRow} AND #{page.endRow}
+ 	</select>
+ 	
+ 	<select id="getReceiveApprovalList" parameterType="HashMap" resultType="com.kh.oup.approval.vo.ApprovalVo">
+ 		SELECT * FROM 
+  		(
+	  		SELECT ROWNUM RN, R.* 
+	  		 FROM(
+                SELECT *
+				FROM APPR A1
+				JOIN APPR_REGUL A2
+				ON A1.A_R_NO = A2.A_R_NO
+				WHERE (A2.DECISION_CODE = #{loginjobTitleCode} OR A2.ALLDECISION_CODE = #{loginjobTitleCode}) AND A1.A_STATEMENT = 'N'
+            ) R
+  		)
+  		WHERE RN BETWEEN #{page.startRow} AND #{page.endRow}
+ 	</select>
+ 	
+ 	<select id="getCompleteAppList" parameterType="HashMap" resultType="com.kh.oup.approval.vo.ApprovalVo">
+ 		SELECT * FROM 
+  		(
+	  		SELECT ROWNUM RN, R.* 
+	  		 FROM(
+                SELECT *
+		 		FROM APPR
+		 		WHERE A_PIC_NAME = #{loginName} AND A_STATEMENT = 'Y'
+            ) R
+  		)
+  		WHERE RN BETWEEN #{page.startRow} AND #{page.endRow}
+ 	</select>
+ 	
+ 	<select id="getApproval" resultType="com.kh.oup.approval.vo.ApprovalVo">
+ 		SELECT *
+ 		FROM APPR
+ 		WHERE A_NO = #{ano}
+ 	</select>
+ 	
+ 	<select id="getOrderNo" resultType="int">
+ 		SELECT O_NO
+ 		FROM STATEMENT
+ 		WHERE S_NO = #{ano}
+ 	</select>
+ 	
+ 	<select id="getProjectNo" resultType="int">
+ 		SELECT PROJECT_NO
+ 		FROM PROJECT
+ 		WHERE PROJECT_NO = #{aDocNo}
+ 	</select>
+ 	
+ 	<select id="getTeamCode" resultType="String">
+ 		SELECT TEAM_CODE
+		FROM EMPLOYEE
+		WHERE EMPLOYEE_NAME = #{name}
+ 	</select>
+ 	
+ 	<select id="getTeamLeaderNo" resultType="String">
+ 		SELECT TEAMREADER_NO 
+ 		FROM TEAM 
+ 		WHERE TEAM_CODE = #{teamCode}
+ 	</select>
+ 	
+ 	<update id="appTeamY">
+ 		UPDATE APPR
+  		SET A_TEAM_NY = 'Y', A_E_DATE1 = SYSDATE
+  		WHERE A_NO = #{aNo}
+ 	</update>
+ 	
+ 	<update id="appAllY">
+ 		UPDATE APPR
+  		SET A_ALLDEC_NY = 'Y', A_E_DATE3 = SYSDATE
+  		WHERE A_NO = #{aNo}
+ 	</update>
+ 	
+ 	<update id="appDecY">
+ 		UPDATE APPR
+  		SET A_DEC_NY = 'Y', A_E_DATE2 = SYSDATE
+  		WHERE A_NO = #{aNo}
+ 	</update>
+ 	
+ 	<select id="getAllCode" resultType="String">
+ 		SELECT ALLDECISION_CODE
+ 		FROM APPR_REGUL
+ 		WHERE D_C_CODE = #{dcCode}
+ 	</select>
+ 	
+ 	<select id="getDecCode" resultType="String">
+ 		SELECT DECISION_CODE
+ 		FROM APPR_REGUL
+ 		WHERE D_C_CODE = #{dcCode}
+ 	</select>
+ 	
+ 	<update id="statementY">
+ 		UPDATE APPR
+  		SET A_STATEMENT = 'Y', A_E_DATE4 = SYSDATE
+  		WHERE A_NO = #{aNo}
+ 	</update>
+ 	
+ 	<!-- 최종 결재 완료되면 실제 문서에서 결재완료 -->
+ 	<update id="docFinalY" parameterType="com.kh.oup.approval.vo.ApprovalVo">
+ 		UPDATE
+ 		<if test="dcCode == 'PJ'">
+ 			PROJECT
+ 			SET A_STATEMENT = '승인'
+ 			WHERE PROJECT_NO = #{aDocNo}
+ 		</if>
+ 		<if test="dcCode == 'SP'">
+  			SET APPROVAL = '승인'
+  			WHERE S_NO = #{aDocNo}
+  		</if>
+  		<if test="dcCode == 'OD'">
+  			SET O_STATEMENT = '승인'
+  			WHERE O_NO = #{aDocNo}
+  		</if>
+  		
+ 	</update>
+ </mapper>

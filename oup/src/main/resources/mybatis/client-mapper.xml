@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="client">
+ 	<insert id="insertClient" parameterType="clientVo">
+ 		insert into client
+ 		(
+ 			c_no,
+ 			c_name,
+ 			b_no,
+ 			b_no2,
+ 			c_type,
+ 			c_owner,
+ 			c_addr,
+ 			c_phone,
+ 			c_fax,
+ 			c_email,
+ 			c_creditlimit,
+ 			c_credit_month,
+ 			c_credit_day,
+ 			c_umony,
+ 			c_date,
+            c_delete_YN
+ 		)
+ 		values
+ 		(
+ 			c_no_seq.nextval,
+ 			#{cName},
+ 			${bNo},
+ 			${bNo2},
+ 			#{cType},
+ 			#{cOwner},
+ 			#{cAddr},
+ 			#{cPhone},
+ 			#{cFax},
+ 			#{cEmail},
+ 			${cCreditLimit},
+ 			${cCreditMonth},
+ 			${cCreditDay},
+ 			0,
+ 			SYSDATE,
+ 			'N'
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectClientCnt" resultType="int">
+ 		select count(c_no) 
+  		from client
+  		where c_delete_yn = 'N'
+ 	</select>
+ 	
+ 	<select id="selectClientList" parameterType="pageVo" resultType="clientVo">
+  		select * from 
+  		(
+	  		select rownum rn, c.* 
+	  		from(
+		  		select * 
+		  		from client 
+		  		where c_delete_yn = 'N'
+		  		order by c_no  		
+	  		) c
+  		)
+  		where rn between #{startRow} and #{endRow}
+  	</select>
+  	
+  	<select id="selectSearchClientCnt" parameterType="string" resultType="int">
+ 		select count(c_no) 
+  		from client
+  		where c_delete_yn = 'N' and (
+  			c_name like'%${search}%' or c_owner like '%${search}%' or c_addr like '%${search}%'
+  		)
+ 	</select>
+ 	
+ 	<select id="selectSearchClientList" parameterType="pageVo" resultType="clientVo">
+  		select * from 
+  		(
+	  		select rownum rn, c.* 
+	  		from(
+		  		select * 
+		  		from client 
+		  		where c_delete_yn = 'N'and (
+  					c_name like'%${search}%' or c_owner like '%${search}%' or c_addr like '%${search}%'
+  				)
+		  		order by c_no  		
+	  		) c
+  		)
+  		where rn between #{startRow} and #{endRow}
+  	</select>
+  	
+  	<update id="deleteClient">
+  		update client
+  		set c_delete_yn = 'Y'
+  		where c_no in 
+  		<foreach collection="array" item="cNn" open="(" close=")" separator=",">
+  			${cNn}  		
+  		</foreach>
+  	</update>
+  	
+  	<select id="selectClientOne" parameterType="int" resultType="clientVo">
+  		select *
+  		from client
+  		where c_no = ${cNo}
+  	</select>
+  	
+  	<update id="updateClient" parameterType="clientVo">
+  		update client
+  		set 
+ 			c_name = #{cName},
+ 			b_no = ${bNo},
+ 			b_no2 = ${bNo2},
+ 			c_type = #{cType},
+ 			c_owner = #{cOwner},
+ 			c_addr = #{cAddr},
+ 			c_phone = #{cPhone},
+ 			c_fax = #{cFax},
+ 			c_email = #{cEmail},
+ 			c_creditlimit = ${cCreditLimit},
+ 			c_credit_month = ${cCreditMonth},
+ 			c_credit_day = ${cCreditDay}
+ 		where c_no = ${cNo}
+  	</update>
+  	
+  	<select id="searchClientList" parameterType="string" resultType="clientVo">
+  		select * from client
+		where c_delete_yn = 'N'and (
+  			c_name like'%${search}%' or c_owner like '%${search}%' or c_no like '%${search}%'
+  			)
+		order by c_no  		
+  	</select>
+ 	
+ </mapper>

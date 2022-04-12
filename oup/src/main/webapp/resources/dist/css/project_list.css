@@ -1,0 +1,31 @@
+
+.card-header{
+    background-color: #5a4e70;
+}
+
+table tr:hover{
+    background-color: #ebe7f1 !important;
+}
+
+
+#approvalBadge{
+    background-color: #a28fc7;
+    color:  white;
+}
+.progress-bar{
+    background-color: #8977ad;
+}
+
+.btn-info{
+    background-color: #d7d0e3;
+    border: #8977ad;
+    color: #5a4e70;
+}
+.btn-info:hover{
+    background-color: #a28fc7;
+}
+
+.btn-danger{
+    background-color: #9d97a7;
+    border: #8977ad;
+}

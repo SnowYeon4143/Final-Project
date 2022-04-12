@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <!-- 파일이름 바꾸기 -->
+ 
+ <mapper namespace="popup">
+ 	<select id="getHouseList" resultType="com.kh.oup.sale.vo.WarehouseVo">
+ 		SELECT * FROM 
+ 		WAREHOUSE
+ 		ORDER BY WAREHOUSE_NO
+ 	</select>
+ 	<select id="getProjectList" resultType="com.kh.oup.sale.vo.ProjectVo">
+ 		SELECT * 
+		FROM PROJECT <!-- P FULL OUTER JOIN SALE S  -->
+		<!-- ON P.PROJECT_NO = S.PROJECT_NO
+		WHERE P.PROJECT_NO IS NULL OR S.PROJECT_NO IS NULL -->
+		ORDER BY <!-- P. -->PROJECT_NO
+ 	</select>
+ 	<select id="getProductList" resultType="com.kh.oup.product.vo.ProductVo">
+ 		SELECT * FROM 
+ 		PRODUCT
+ 		ORDER BY P_NO
+ 	</select>
+ 	<select id="getOrderList" resultType="com.kh.oup.sale.vo.OrderVo">
+ 		SELECT * FROM
+ 		ORDER1
+ 		ORDER BY O_NO
+ 	</select>
+ </mapper>

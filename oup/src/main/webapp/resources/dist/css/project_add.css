@@ -1,0 +1,74 @@
+.card-header{
+    background-color: #716094 !important;
+}
+.card-primary{
+    background-color: #d7d0e3;
+}
+.card-title{
+    font-size: 30px;
+}
+
+#miandiv{
+    padding-top: 50px;
+    padding-left: 200px;
+    padding-right: 200px;
+
+}
+
+
+/* project group */
+table td:nth-child(2){
+	width:300px
+}
+
+input{
+	width:100%;
+}
+#bntbottom{
+    margin-left: 3px !important;
+}
+#empNo{
+	border:none;
+	background-color: transparent !important;
+}
+#empNo:focus{
+	outline:none;
+}
+
+#submitbtn{
+	width:150px !important;
+	margin-right:3px !important;
+}
+#startDate, #endDate{
+	width:150px !important;
+}
+
+
+
+/* project edit */
+#projectNo{
+	border:none;
+	background-color: transparent !important;
+	color: wite !important;
+}
+#projectNo:focus{
+	outline:none;
+}
+#searchM{
+	width:50px !important;
+}
+
+
+#searchEmp{
+ background-color:#443b53;
+ border: 1px solid #5a4e70;
+ border-radius: 3px;
+ color: white;
+ height: 30px;
+}
+#searchEmp:hover{
+ background-color:#ffffff;
+ color: #5a4e70;
+ border: 1px solid #5a4e70;
+}
+
