@@ -74,18 +74,12 @@
 <!-- AdminLTE App -->
 <script src="${path}/resources/dist/js/adminlte.min.js"></script>
 
-<script> 
-	function submit(){
-		let search = document.getElementById("searchClient").value;
-		document.searchform.submit(search);
-	}	
-	
+<script>
 	function projectList(projectNo, projectName) { 
 			opener.document.getElementById("projectNo").value = projectNo;
 			opener.document.getElementById("projectName").value = projectName;
 			self.close();
 	}
-
 </script>
 </body>
 </html>

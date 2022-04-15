@@ -215,10 +215,69 @@
                 <div class="col-sm-4">
                   <div class="input-group col">
                     <input type="text" name="wareHouseNo" id="warehouseNo" class="form-control" placeholder="출하창고">
-                    <button onclick="warehousePopup()" type="button" class="input-group-text"><i class="bi bi-search"></i></button>
+                    <!-- 모달창 -->
+                    <button type="button" class="input-group-text" data-toggle="modal" data-target="#modal-warehouse">
+	                  <i class="bi bi-search"></i>
+	                </button>
+                    <!-- 팝업창 -->
+                    <!-- <button onclick="warehousePopup()" type="button" class="input-group-text"><i class="bi bi-search"></i></button> -->
                     <input id="warehouseName" type="text" class="form-control" readonly>
                   </div>
                 </div>
+                
+                <!-- modal -->
+				<div class="modal fade" id="modal-warehouse">
+			        <div class="modal-dialog">
+			          <div class="modal-content" style="width: 600px">
+			            <div class="modal-header">
+			              <h4 class="modal-title">창고 조회</h4>
+			              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			                <span aria-hidden="true">&times;</span>
+			              </button>
+			            </div>
+			            <div class="modal-body">
+							<!-- 창고 검색 -->
+								<table class="table table-bordered projects">
+				                  <thead>
+				                      <tr>
+				                          <th class="text-center">
+				                              창고번호
+				                          </th>
+				                          <th class="text-center">
+				                              창고명
+				                          </th>
+				                          <th class="text-center">
+				                              창고주소
+				                          </th>
+				                      </tr>
+				                  </thead>
+				                  <tbody>
+					                  <c:forEach items="${wlist}" var="l">				
+					                    <tr>
+					                      <td style="color:blue;"><span style="text-decoration: underline; cursor: pointer;" data-dismiss="modal" id="confirm_id" onclick="warehouseList('${l.warehouseNo}','${l.warehouseName}')">${l.warehouseNo}</span></td>
+					                      <td>${l.warehouseName}</td>
+					                      <td>${l.warehouseAddr}</td>
+					                    </tr>
+					                  </c:forEach>
+				                  </tbody>
+				              	</table>
+							<!-- 창고 검색 -->
+			            </div>
+			            <script>
+							function warehouseList(warehouseNo, warehouseName) { 
+									document.getElementById("warehouseNo").value = warehouseNo;
+									document.getElementById("warehouseName").value = warehouseName;
+							}
+						</script>
+			            <div class="modal-footer justify-content-between">
+			              <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+			            </div>
+			          </div>
+			          <!-- /.modal-content -->
+			        </div>
+			        <!-- /.modal-dialog -->
+			      </div>
+			      <!-- /.modal -->
 
                 <div class="col-sm-1" style="padding:5px;"><b>거래유형</b></div>
                 <div class="col-sm-1"></div>
@@ -236,10 +295,64 @@
                 <div class="col-sm-4">
                   <div class="input-group col mb-3">
                     <input type="text" name="projectNo" id="projectNo" class="form-control" placeholder="프로젝트">
-                    <button type="button" onclick="projectPopup()" class="input-group-text"><i class="bi bi-search"></i></button>
+                    <!-- 모달창 -->
+                    <button type="button" class="input-group-text" data-toggle="modal" data-target="#modal-project">
+	                  <i class="bi bi-search"></i>
+	                </button>
+	                <!-- 팝업창 -->
+                    <!-- <button type="button" onclick="projectPopup()" class="input-group-text"><i class="bi bi-search"></i></button> -->
                     <input type="text" id="projectName" class="form-control" readonly>
                   </div>
                 </div>
+                
+                <!-- modal -->
+				<div class="modal fade" id="modal-project">
+			        <div class="modal-dialog">
+			          <div class="modal-content" style="width: 600px">
+			            <div class="modal-header">
+			              <h4 class="modal-title">프로젝트 조회</h4>
+			              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			                <span aria-hidden="true">&times;</span>
+			              </button>
+			            </div>
+			            <div class="modal-body">
+							<!-- 프로젝트 검색 -->
+								<table class="table table-bordered projects">
+				                  <thead>
+				                      <tr>
+				                          <th class="text-center">
+				                              프로젝트번호
+				                          </th>
+				                          <th class="text-center">
+				                              프로젝트명
+				                      </tr>
+				                  </thead>
+				                  <tbody>
+					                  <c:forEach items="${plist}" var="l">				
+					                    <tr>
+					                      <td style="color:blue;"><span style="text-decoration: underline; cursor: pointer;" data-dismiss="modal" id="confirm_id" onclick="projectList('${l.projectNo}','${l.projectName}')">${l.projectNo}</span></td>
+					                      <td>${l.projectName}</td>
+					                    </tr>
+					                  </c:forEach>
+				                  </tbody>
+				              	</table>
+							<!-- 프로젝트 검색 -->
+			            </div>
+			            <script>
+							function projectList(projectNo, projectName) { 
+									document.getElementById("projectNo").value = projectNo;
+									document.getElementById("projectName").value = projectName;
+							}
+						</script>
+			            <div class="modal-footer justify-content-between">
+			              <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+			            </div>
+			          </div>
+			          <!-- /.modal-content -->
+			        </div>
+			        <!-- /.modal-dialog -->
+			      </div>
+			      <!-- /.modal -->
                 
                 <div class="col-sm-1" style="padding:5px;"><b>미수금액(전 잔액)</b></div>
                 <div class="col-sm-1"></div>

@@ -79,18 +79,12 @@
 <!-- AdminLTE App -->
 <script src="${path}/resources/dist/js/adminlte.min.js"></script>
 
-<script> 
-	function submit(){
-		let search = document.getElementById("searchClient").value;
-		document.searchform.submit(search);
-	}	
-	
+<script>
 	function warehouseList(warehouseNo, warehouseName) { 
 			opener.document.getElementById("warehouseNo").value = warehouseNo;
 			opener.document.getElementById("warehouseName").value = warehouseName;
 			self.close();
 	}
-
 </script>
 </body>
 </html>

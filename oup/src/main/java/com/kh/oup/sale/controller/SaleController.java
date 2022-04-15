@@ -20,11 +20,14 @@ import com.kh.oup.client.vo.ClientVo;
 import com.kh.oup.common.PageVo;
 import com.kh.oup.employee.service.EmployeeService;
 import com.kh.oup.employee.vo.EmployeeVo;
+import com.kh.oup.project.vo.ProjectVo;
+import com.kh.oup.sale.service.PopUpService;
 import com.kh.oup.sale.service.SaleService;
 import com.kh.oup.sale.vo.OrderListVo;
 import com.kh.oup.sale.vo.OrderVo;
 import com.kh.oup.sale.vo.SaleListVo;
 import com.kh.oup.sale.vo.SaleVo;
+import com.kh.oup.sale.vo.WarehouseVo;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +41,9 @@ public class SaleController {
 	@Autowired
 	private ClientService cservice;
 	@Autowired
-	EmployeeService eservice;
+	private EmployeeService eservice;
+	@Autowired
+	private PopUpService pservice;
 	
 	@GetMapping("/enter")
 	public String saleEnter(HttpServletRequest req, Model model) throws Exception {
@@ -52,6 +57,14 @@ public class SaleController {
 		//직원 정보
 		List<EmployeeVo> elist = eservice.getEmployeeList();
 		model.addAttribute("elist", elist);
+		
+		//창고 정보
+		List<WarehouseVo> wlist = pservice.getHouseList();
+		model.addAttribute("wlist", wlist);
+		
+		//프로젝트 정보
+		List<ProjectVo> plist = pservice.getProjectList();
+		model.addAttribute("plist", plist);
 		
 		return "pages/sale/saleEnter";
 	}
